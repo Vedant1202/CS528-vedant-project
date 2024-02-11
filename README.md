@@ -1,4 +1,7 @@
-# omicron-unity CAVE2 Simulator
+# Vedant's CS 528 Virtual Reality class project
+Website containing all the info - [https://vedant1202.github.io/CS528-vedant-project/](https://vedant1202.github.io/CS528-vedant-project/)
+
+## omicron-unity CAVE2 Simulator
 A example project for developing Unity3D applications for virtual reality environments such as the Electronic Visualization Laboratory's CAVE2(TM). This package and its associated submodule (https://github.com/arthurnishimoto/module-omicron) work as a wrapper around the CAVE2 API so that the CAVE2 environment can be simulated in Unity3D using stock Unity assets (no editor platform dependencies, professional licenses needed).
 
 **Documentation:**
