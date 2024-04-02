@@ -9,6 +9,8 @@ public class ConstellationRenderer : MonoBehaviour
     public GameObject dynamicRenderingObject; // Reference to the GameObject containing DynamicRendering script
     public Material lineMaterial; // Material for constellation lines
     public string filePath = "Assets/constellations.fab"; // Path to the constellations file
+    public TextAsset constellationCsvFile; // Reference to the InputField for exoplanet CSV file path
+
 
     private Dictionary<string, GameObject> loadedStars = new Dictionary<string, GameObject>(); // Dictionary to store loaded stars with hip id as key
     private Dictionary<string, List<GameObject>> constellationLines = new Dictionary<string, List<GameObject>>(); // Dictionary to store constellation lines with constellation id as key
@@ -141,15 +143,28 @@ public class ConstellationRenderer : MonoBehaviour
 
     void LoadConstellations()
     {
-        if (File.Exists(filePath))
-        {
-            StreamReader reader = new StreamReader(filePath);
+        //if (filePath)
+        //{
+            //StreamReader reader = new StreamReader(filePath);
             int lineNumber = 0;
 
-            while (!reader.EndOfStream)
+            string[] starDataRows = constellationCsvFile.text.Split('\n');
+
+            bool isFirstLine = true;
+
+            // Read the rest of the lines
+            foreach (string row in starDataRows)
             {
+                if (isFirstLine)
+                {
+                    isFirstLine = false;
+                    continue;
+                }
+
+            //    while (!reader.EndOfStream)
+            //{
                 lineNumber++;
-                string line = reader.ReadLine();
+                string line = row;
                 string[] values = line.Split(new string[] { "  ", " " }, System.StringSplitOptions.RemoveEmptyEntries);
                 if (values.Length >= 3)
                 {
@@ -223,14 +238,15 @@ public class ConstellationRenderer : MonoBehaviour
                     }
                 }
             }
+            //}
 
-            reader.Close();
+            //reader.Close();
         }
-        else
-        {
-            Debug.LogError("Constellations file not found: " + filePath);
-        }
-    }
+        //else
+        //{
+        //    Debug.LogError("Constellations file not found: " + filePath);
+        //}
+    //}
 
     GameObject FindStar(string hipId)
     {

@@ -15,7 +15,10 @@ public class DynamicRendering : MonoBehaviour
     public Button startVelocityButton; // Reference to the button to start velocity
     public Button stopVelocityButton; // Reference to the button to stop velocity
 
-    public string csvFilePath; // Reference to the InputField for CSV file path
+    public string csvFilePath; // Reference to the InputField for star CSV file path
+  
+    public TextAsset exoCsvFile; // Reference to the InputField for exoplanet CSV file path
+    public TextAsset starCsvFile;
     public Slider positionScaleSlider; // Reference to the Slider for position scale
 
 
@@ -318,16 +321,29 @@ public class DynamicRendering : MonoBehaviour
         // Clear existing data
         starDataset.Clear();
 
-        // Read the CSV file
-        StreamReader reader = new StreamReader(filePath);
+        //// Read the CSV file
+        //StreamReader reader = new StreamReader(filePath);
 
-        // Skip the header if exists
-        reader.ReadLine();
+        //// Skip the header if exists
+        //reader.ReadLine();
+
+        string[] starDataRows = starCsvFile.text.Split('\n');
+
+        bool isFirstLine = true;
 
         // Read the rest of the lines
-        while (!reader.EndOfStream)
+        foreach (string row in starDataRows)
         {
-            string[] values = reader.ReadLine().Split(',');
+            if (isFirstLine)
+            {
+                isFirstLine = false;
+                continue;
+            }
+
+            // Read the rest of the lines
+            //while (!reader.EndOfStream)
+        //{
+            string[] values = row.Split(',');
             if (values.Length == 11) // Ensure all fields are present
             {
                 StarData starData = new StarData();
@@ -351,7 +367,7 @@ public class DynamicRendering : MonoBehaviour
         }
 
         // Close the reader
-        reader.Close();
+        //reader.Close();
     }
 
     // Call this method to load the CSV file from the provided path
@@ -394,16 +410,24 @@ public class DynamicRendering : MonoBehaviour
     // Parse the exoplanet CSV file and update the starDataset with number of exoplanets
     void ParseExoplanetCSV(string filePath)
     {
-        // Read the CSV file
-        StreamReader reader = new StreamReader(filePath);
+        //// Read the CSV file
+        //StreamReader reader = new StreamReader(filePath);
 
-        // Skip the header if exists
-        reader.ReadLine();
+        //// Skip the header if exists
+        //reader.ReadLine();
+        string[] exoDataRows = exoCsvFile.text.Split('\n');
+
+        bool isFirstLine = true;
 
         // Read the rest of the lines
-        while (!reader.EndOfStream)
+        foreach (string row in exoDataRows)
         {
-            string[] values = reader.ReadLine().Split(',');
+            if (isFirstLine)
+            {
+                isFirstLine = false;
+                continue;
+            }
+            string[] values = row.Split(',');
             if (values.Length == 2) // Ensure all fields are present
             {
                 string hipIdString = values[0].Trim();
@@ -441,7 +465,7 @@ public class DynamicRendering : MonoBehaviour
         }
 
         // Close the reader
-        reader.Close();
+        //reader.Close();
     }
 
     // Function to set position scale factor
