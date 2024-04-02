@@ -384,27 +384,27 @@ public class DynamicRendering : MonoBehaviour
     void LoadStarCSV()
     {
         string filePath = csvFilePath;
-        if (File.Exists(filePath))
-        {
+        //if (File.Exists(filePath))
+        //{
             ParseCSV(filePath);
-        }
-        else
-        {
-            Debug.LogError("File does not exist: " + filePath);
-        }
+        //}
+        //else
+        //{
+        //    Debug.LogError("File does not exist: " + filePath);
+        //}
     }
 
     // Load the exoplanet CSV file
     void LoadExoplanetCSV()
     {
-        if (File.Exists(exoplanetCsvFilePath))
-        {
+        //if (File.Exists(exoplanetCsvFilePath))
+        //{
             ParseExoplanetCSV(exoplanetCsvFilePath);
-        }
-        else
-        {
-            Debug.LogError("Exoplanet CSV file not found: " + exoplanetCsvFilePath);
-        }
+        //}
+        //else
+        //{
+        //    Debug.LogError("Exoplanet CSV file not found: " + exoplanetCsvFilePath);
+        //}
     }
 
     // Parse the exoplanet CSV file and update the starDataset with number of exoplanets

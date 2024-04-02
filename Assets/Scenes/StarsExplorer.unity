@@ -266,7 +266,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.15450001, y: 0.31290007}
+  m_AnchoredPosition: {x: -0.15450001, y: 0.232}
   m_SizeDelta: {x: 0.30394, y: 0.0906}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &94506347
@@ -2071,6 +2071,11 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: 3.785
       objectReference: {fileID: 0}
+    - target: {fileID: 114000013147145116, guid: c1621f4dd1e8c2748a5a423aa7736d55,
+        type: 3}
+      propertyPath: showMenu
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c1621f4dd1e8c2748a5a423aa7736d55, type: 3}
 --- !u!1 &515023035
@@ -2109,7 +2114,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.15450001, y: 0.31290007}
+  m_AnchoredPosition: {x: -0.15450001, y: 0.15}
   m_SizeDelta: {x: 0.30394, y: 0.0906}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &515023037
@@ -2765,7 +2770,7 @@ MonoBehaviour:
     type: 3}
   startVelocityButton: {fileID: 1272096995}
   stopVelocityButton: {fileID: 423048091}
-  csvFilePath: Assets/Editor/CSVs/stardata_clean_final.csv
+  csvFilePath: Assets/Editor/CSVs/stardata_clean_final.csv1
   exoCsvFile: {fileID: 4900000, guid: 0cc1aaf8781bc4756b28f22d73b2ad4e, type: 3}
   starCsvFile: {fileID: 4900000, guid: 4c184f8519b894831baf1a3301143576, type: 3}
   positionScaleSlider: {fileID: 358871590}
@@ -4346,7 +4351,7 @@ MonoBehaviour:
   - {fileID: 1541141415}
   - {fileID: 358871590}
   currentItem: 0
-  showMenu: 1
+  showMenu: 0
   showMenuSpeed: 5
   menuManager: {fileID: 1089452734}
   activeMenu: 0
