@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class ConstellationDatasetManager : MonoBehaviour
@@ -31,7 +32,7 @@ public class ConstellationDatasetManager : MonoBehaviour
     public TextAsset mayaConstellationFile;
     public TextAsset mayaConstellationNamesFile;
 
-    private Dictionary<ConstellationDataset, (TextAsset, TextAsset)> datasetMap = new Dictionary<ConstellationDataset, (TextAsset, TextAsset)>();
+    private Dictionary<ConstellationDataset, (string[], string[])> datasetMap = new Dictionary<ConstellationDataset, (string[], string[])>();
 
     public ConstellationDataset SelectedConstellationDataset { get; private set; }
 
@@ -40,15 +41,39 @@ public class ConstellationDatasetManager : MonoBehaviour
     void Start()
     {
         // Populate the dataset map
-        datasetMap.Add(ConstellationDataset.Modern, (modernConstellationFile, modernConstellationNamesFile));
-        datasetMap.Add(ConstellationDataset.Aztec, (aztecConstellationFile, aztecConstellationNamesFile));
-        datasetMap.Add(ConstellationDataset.Norse, (norseConstellationFile, norseConstellationNamesFile));
-        datasetMap.Add(ConstellationDataset.Egyptian, (egyptianConstellationFile, egyptianConstellationNamesFile));
-        datasetMap.Add(ConstellationDataset.Chinese, (chineseConstellationFile, chineseConstellationNamesFile));
-        datasetMap.Add(ConstellationDataset.Maya, (mayaConstellationFile, mayaConstellationNamesFile));
+        datasetMap.Add(ConstellationDataset.Modern, (GetLines(modernConstellationFile), GetLines(modernConstellationNamesFile)));
+        datasetMap.Add(ConstellationDataset.Aztec, (GetLines(aztecConstellationFile), GetLines(aztecConstellationNamesFile)));
+        datasetMap.Add(ConstellationDataset.Norse, (GetLines(norseConstellationFile), GetLines(norseConstellationNamesFile)));
+        datasetMap.Add(ConstellationDataset.Egyptian, (GetLines(egyptianConstellationFile), GetLines(egyptianConstellationNamesFile)));
+        datasetMap.Add(ConstellationDataset.Chinese, (GetLines(chineseConstellationFile), GetLines(chineseConstellationNamesFile)));
+        datasetMap.Add(ConstellationDataset.Maya, (GetLines(mayaConstellationFile), GetLines(mayaConstellationNamesFile)));
 
         // Set default dataset
-        SelectedConstellationDataset = ConstellationDataset.Modern;
+        //Debug.Log(ConstellationDataset.Keys());
+        ToggleModern(true);
+        // Iterate over each enum value and print its name
+        //foreach (ConstellationDataset dataset in Enum.GetValues(typeof(ConstellationDataset)))
+        //{
+        //    Debug.Log(dataset);
+        //}
+        //SelectedConstellationDataset = ConstellationDataset.Modern;
+
+        //Invoke("ToggleAztec", 5f);
+    }
+
+    string[] GetLines(TextAsset textAsset)
+    {
+        if (textAsset != null)
+        {
+            string[] lines = textAsset.text.Split('\n');
+            Debug.Log(lines[0]);
+            return lines;
+        }
+        else
+        {
+            Debug.LogError("TextAsset is null.");
+            return new string[0];
+        }
     }
 
     public void SetSelectedConstellationDataset(string datasetName)
@@ -68,7 +93,7 @@ public class ConstellationDatasetManager : MonoBehaviour
             Debug.LogError("Invalid dataset name: " + datasetName);
         }
 
-        ConstellationRenderer.SendMessage("UpdateConstellationsFromFile");
+        ConstellationRenderer.SendMessage("UpdateConstellations");
     }
 
     public void ToggleModern(bool isOn)
@@ -81,6 +106,7 @@ public class ConstellationDatasetManager : MonoBehaviour
 
     public void ToggleAztec(bool isOn)
     {
+        Debug.Log("called aztec");
         if (isOn)
         {
             SetSelectedConstellationDataset("aztec");
@@ -119,49 +145,31 @@ public class ConstellationDatasetManager : MonoBehaviour
         }
     }
 
-
-    public TextAsset GetConstellationFile()
+    public string[] GetConstellationFile()
     {
-        switch (SelectedConstellationDataset)
+        (string[], string[]) dataset;
+        if (datasetMap.TryGetValue(SelectedConstellationDataset, out dataset))
         {
-            case ConstellationDataset.Modern:
-                return modernConstellationFile;
-            case ConstellationDataset.Aztec:
-                return aztecConstellationFile;
-            case ConstellationDataset.Norse:
-                return norseConstellationFile;
-            case ConstellationDataset.Egyptian:
-                return egyptianConstellationFile;
-            case ConstellationDataset.Chinese:
-                return chineseConstellationFile;
-            case ConstellationDataset.Maya:
-                return mayaConstellationFile;
-            default:
-                Debug.LogError("Invalid constellation dataset selected: " + SelectedConstellationDataset);
-                return null;
+            return dataset.Item1;
+        }
+        else
+        {
+            Debug.LogError("Selected constellation dataset not found in dataset map: " + SelectedConstellationDataset);
+            return null;
         }
     }
 
-    public TextAsset GetConstellationNamesFile()
+    public string[] GetConstellationNamesFile()
     {
-        switch (SelectedConstellationDataset)
+        (string[], string[]) dataset;
+        if (datasetMap.TryGetValue(SelectedConstellationDataset, out dataset))
         {
-            case ConstellationDataset.Modern:
-                return modernConstellationNamesFile;
-            case ConstellationDataset.Aztec:
-                return aztecConstellationNamesFile;
-            case ConstellationDataset.Norse:
-                return norseConstellationNamesFile;
-            case ConstellationDataset.Egyptian:
-                return egyptianConstellationNamesFile;
-            case ConstellationDataset.Chinese:
-                return chineseConstellationNamesFile;
-            case ConstellationDataset.Maya:
-                return mayaConstellationNamesFile;
-            default:
-                Debug.LogError("Invalid constellation dataset selected: " + SelectedConstellationDataset);
-                return null;
+            return dataset.Item2;
+        }
+        else
+        {
+            Debug.LogError("Selected constellation dataset not found in dataset map: " + SelectedConstellationDataset);
+            return null;
         }
     }
-
 }

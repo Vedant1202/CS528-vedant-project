@@ -8,6 +8,8 @@ using System;
 public class DynamicRendering : MonoBehaviour
 {
     public Transform userOrigin; // Reference to the user's position
+    public Transform playerController; // Reference to the user's position
+
     public float maxDistance = 100f; // Maximum distance to load stars
     private float positionScale = 1.0f; // Scale factor for positions of stars
 
@@ -63,8 +65,8 @@ public class DynamicRendering : MonoBehaviour
 
         // Store the initial position
         initialPosition = userOrigin.transform.position;
-        originalPosition = userOrigin.transform.position;
-        originalOrientation = userOrigin.transform.rotation;
+        originalPosition = playerController.transform.position;
+        originalOrientation = playerController.transform.rotation;
 
         // Raise the event to signal that stars are loaded
         if (StarsLoaded != null)
@@ -96,7 +98,7 @@ public class DynamicRendering : MonoBehaviour
         stellarCheckbox.onValueChanged.AddListener(OnStarColorSchemeCheckboxValueChanged);
         knownPlanetsCheckbox.onValueChanged.AddListener(OnStarColorSchemeCheckboxValueChanged);
         OnStarColorSchemeCheckboxValueChanged(true);
-        Invoke("resetLocation", 15f);
+        //Invoke("resetLocation", 15f);
         //resetLocation();
     }
 
@@ -496,7 +498,7 @@ public class DynamicRendering : MonoBehaviour
     public void resetLocation ()
     {
         Debug.Log("Called");
-        userOrigin.transform.position = originalPosition;
+        playerController.transform.position = originalPosition;
         //Vector3 currentPosition = userOrigin.transform.position;
         //MoveToTarget(userOrigin, currentPosition, originalPosition);
     }
@@ -527,7 +529,7 @@ public class DynamicRendering : MonoBehaviour
 
     public void resetOrientation()
     {
-        userOrigin.transform.rotation = originalOrientation;
+        playerController.transform.rotation = originalOrientation;
     }
 
     public void resetTime()
