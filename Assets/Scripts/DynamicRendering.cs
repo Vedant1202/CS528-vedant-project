@@ -34,40 +34,59 @@ public class DynamicRendering : MonoBehaviour
     public float updateInterval = 5f; // Update interval in seconds
     public float updateVelocityInterval = 2f; // Update interval in seconds
     private float lastVelocityUpdateTime; // Time of the last velocity update
-                                          // Path to the exoplanet CSV file
+    public bool startVelocity = false;
+
     public ConstellationRenderer ConstellationRenderer;
 
     public static event Action StarsLoaded; // Event to signal that stars are loaded
 
     private Vector3 initialPosition; // Initial position of the origin GameObject
+    private Vector3 originalPosition;
+    private Quaternion originalOrientation;
+    public float resetDuration = 5.0f; // Duration of the movement
     //public float distanceThreshold = 1.0f; // Distance threshold to trigger the function
 
     public Toggle stellarCheckbox;
     public Toggle knownPlanetsCheckbox;
+
+    public bool isVelocityNegative = false;
+    private int velocityDirectionMultiplier = 1;
 
     private int numVelocityCycles = 0;
 
     // Start is called before the first frame update
     void Start()
     {
+        //userOrigin.position = new Vector3(-24.41737f, 3.225125f, 45.44164f);
         LoadCSVFile();
         UpdateStarsWithOriginMovement();
 
         // Store the initial position
         initialPosition = userOrigin.transform.position;
+        originalPosition = userOrigin.transform.position;
+        originalOrientation = userOrigin.transform.rotation;
 
         // Raise the event to signal that stars are loaded
         if (StarsLoaded != null)
         {
             StarsLoaded.Invoke();
         }
+
         //StartCoroutine(CallFunctionRepeatedly());
-        lastUpdateTime = Time.time; // Initialize the last update time
-        //ToggleVelocity(true); // toggle
+        if (startVelocity)
+        {
+            lastUpdateTime = Time.time; // Initialize the last update time
+            ToggleVelocity(true); // toggle
+        }
+
+        if (isVelocityNegative)
+        {
+            velocityDirectionMultiplier = -1;
+        }
         //UpdateStarsWithOriginMovement();
         // Add listener to the InputField for value changes
         //csvFilePathInput.onValueChanged.AddListener(delegate { LoadCSVFile(); });
-         //Add listener to the Slider for position scale changes
+        //Add listener to the Slider for position scale changes
         positionScaleSlider.onValueChanged.AddListener(delegate { SetPositionScale(positionScaleSlider.value); });
         // Add onClick listeners to the buttons
         startVelocityButton.onClick.AddListener(StartVelocity);
@@ -77,12 +96,19 @@ public class DynamicRendering : MonoBehaviour
         stellarCheckbox.onValueChanged.AddListener(OnStarColorSchemeCheckboxValueChanged);
         knownPlanetsCheckbox.onValueChanged.AddListener(OnStarColorSchemeCheckboxValueChanged);
         OnStarColorSchemeCheckboxValueChanged(true);
+        Invoke("resetLocation", 15f);
+        //resetLocation();
     }
 
     // Function to handle changes in the "Stellar" checkbox
     void OnStarColorSchemeCheckboxValueChanged(bool newValue = true)
     {
         UpdateStarsWithOriginMovement();
+    }
+
+    public void ToggleNegativeVelocity()
+    {
+        this.velocityDirectionMultiplier = velocityDirectionMultiplier * -1;
     }
 
     // Function to start velocity
@@ -283,9 +309,9 @@ public class DynamicRendering : MonoBehaviour
                 {
                     Vector3 velocity = new Vector3(starData.vx, starData.vy, starData.vz);
                     Vector3 newPosition = new Vector3(
-                        starData.x0 + velocity.x * deltaTime,
-                        starData.y0 + velocity.y * deltaTime,
-                        starData.z0 + velocity.z * deltaTime
+                        starData.x0 + velocity.x * deltaTime * velocityDirectionMultiplier,
+                        starData.y0 + velocity.y * deltaTime * velocityDirectionMultiplier,
+                        starData.z0 + velocity.z * deltaTime * velocityDirectionMultiplier
                     );
 
                     // Scale the positions of stars
@@ -466,4 +492,55 @@ public class DynamicRendering : MonoBehaviour
         public string spect;
         public int numExo; // Number of exoplanets
     }
+
+    public void resetLocation ()
+    {
+        Debug.Log("Called");
+        userOrigin.transform.position = originalPosition;
+        //Vector3 currentPosition = userOrigin.transform.position;
+        //MoveToTarget(userOrigin, currentPosition, originalPosition);
+    }
+
+    IEnumerator MoveToTarget(Transform targetObj, Vector3 startPosition, Vector3 targetPosition)
+    {
+        //Vector3 startPosition = userOrigin.transform.position; // Initial position of the GameObject
+        float elapsedTime = 0f; // Elapsed time since the start of the movement
+
+        while (elapsedTime < resetDuration)
+        {
+            // Calculate the interpolation factor (0 to 1) based on the elapsed time
+            float t = elapsedTime / resetDuration;
+
+            // Interpolate between the start position and target position using Lerp
+            targetObj.position = Vector3.Lerp(startPosition, targetPosition, t);
+
+            // Increment the elapsed time
+            elapsedTime += Time.deltaTime;
+
+            // Wait for the next frame
+            yield return null;
+        }
+
+        // Ensure the object reaches exactly the target position
+        targetObj.position = targetPosition;
+    }
+
+    public void resetOrientation()
+    {
+        userOrigin.transform.rotation = originalOrientation;
+    }
+
+    public void resetTime()
+    {
+        numVelocityCycles = 1;
+        UpdateStarsWithOriginMovement();
+    }
+
+    public void resetAll()
+    {
+        resetTime();
+        resetLocation();
+        resetOrientation();
+    }
 }
+

@@ -68,7 +68,7 @@ public class ConstellationDatasetManager : MonoBehaviour
             Debug.LogError("Invalid dataset name: " + datasetName);
         }
 
-        ConstellationRenderer.SendMessage("UpdateConstellations");
+        ConstellationRenderer.SendMessage("UpdateConstellationsFromFile");
     }
 
     public void ToggleModern(bool isOn)
