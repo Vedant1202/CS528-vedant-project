@@ -14,9 +14,8 @@ public class DynamicRendering : MonoBehaviour
     public GameObject starPrefab; // Prefab for star cube
     public Button startVelocityButton; // Reference to the button to start velocity
     public Button stopVelocityButton; // Reference to the button to stop velocity
+    public float velocityDistanceMultiplier = 0.1f;
 
-    public string csvFilePath; // Reference to the InputField for star CSV file path
-  
     public TextAsset exoCsvFile; // Reference to the InputField for exoplanet CSV file path
     public TextAsset starCsvFile;
     public Slider positionScaleSlider; // Reference to the Slider for position scale
@@ -26,6 +25,7 @@ public class DynamicRendering : MonoBehaviour
     public List<StarData> starDataset = new List<StarData>();
     //private List<StarData> starDataset = new List<StarData>(); // List to store star data
     public Dictionary<int, GameObject> loadedStars = new Dictionary<int, GameObject>(); // Dictionary to store loaded stars with hip as key
+    private List<StarData> loadedStarsArray = new List<StarData> { }; // Dictionary to store loaded stars with hip as key
 
     private bool isStarted = false; // Flag to indicate whether Start function has been called
     private bool isVelocityEnabled = false; // Flag to indicate whether velocity functionality is enabled
@@ -35,8 +35,6 @@ public class DynamicRendering : MonoBehaviour
     public float updateVelocityInterval = 2f; // Update interval in seconds
     private float lastVelocityUpdateTime; // Time of the last velocity update
                                           // Path to the exoplanet CSV file
-    public string exoplanetCsvFilePath;
-
     public ConstellationRenderer ConstellationRenderer;
 
     public static event Action StarsLoaded; // Event to signal that stars are loaded
@@ -64,7 +62,7 @@ public class DynamicRendering : MonoBehaviour
             StarsLoaded.Invoke();
         }
         //StartCoroutine(CallFunctionRepeatedly());
-        //lastUpdateTime = Time.time; // Initialize the last update time
+        lastUpdateTime = Time.time; // Initialize the last update time
         //ToggleVelocity(true); // toggle
         //UpdateStarsWithOriginMovement();
         // Add listener to the InputField for value changes
@@ -78,10 +76,11 @@ public class DynamicRendering : MonoBehaviour
         // Add listeners to detect changes in checkbox states
         stellarCheckbox.onValueChanged.AddListener(OnStarColorSchemeCheckboxValueChanged);
         knownPlanetsCheckbox.onValueChanged.AddListener(OnStarColorSchemeCheckboxValueChanged);
+        OnStarColorSchemeCheckboxValueChanged(true);
     }
 
     // Function to handle changes in the "Stellar" checkbox
-    void OnStarColorSchemeCheckboxValueChanged(bool newValue)
+    void OnStarColorSchemeCheckboxValueChanged(bool newValue = true)
     {
         UpdateStarsWithOriginMovement();
     }
@@ -168,7 +167,7 @@ public class DynamicRendering : MonoBehaviour
                 // Set color based on spectral type
                 Color starColor = GetStarColor(starData);
                 SetStarColor(newStar, starColor);
-
+                loadedStarsArray.Add(starData);
                 loadedStars.Add(starData.hip, newStar);
             }
         }
@@ -183,9 +182,9 @@ public class DynamicRendering : MonoBehaviour
         {
             {"O", Color.blue},
             {"B", Color.cyan},
-            {"A", Color.yellow},
-            {"F", Color.green},
-            {"G", Color.white},
+            {"A", Color.white},
+            {"F", new Color(1, 1, 0.8f)}, // yellow-white
+            {"G", Color.yellow},
             {"K", new Color(1, 0.5f, 0)},  // Orange color
             {"M", Color.red}
         };
@@ -207,12 +206,12 @@ public class DynamicRendering : MonoBehaviour
         // Define a mapping between numExo values and colors in a descending gradient
         Dictionary<int, Color> numExoColorMapping = new Dictionary<int, Color>()
         {
-            {6, new Color(0, 0, 1)},    // Blue
-            {5, new Color(0.25f, 0.25f, 1)}, // Light Blue
-            {4, new Color(0.5f, 0.5f, 1)},   // Lighter Blue
-            {3, new Color(0.75f, 0.75f, 1)}, // Even Lighter Blue
-            {2, Color.gray},   // Gray
-            {1, Color.white}   // White
+            {6, Color.red},
+            {5, Color.magenta},
+            {4, Color.yellow},
+            {3, Color.green},
+            {2, Color.cyan},
+            {1, Color.blue}
         };
 
         // Check if the given numExo value exists in the mapping
@@ -223,7 +222,7 @@ public class DynamicRendering : MonoBehaviour
         else
         {
             // Default color if the numExo value is not found
-            return Color.black;
+            return Color.white;
         }
     }
 
@@ -239,7 +238,7 @@ public class DynamicRendering : MonoBehaviour
             else
             {
                 // Default color if numExo is null
-                return Color.green;
+                return Color.white;
             }
         }
         else if (stellarCheckboxChecked)
@@ -278,7 +277,7 @@ public class DynamicRendering : MonoBehaviour
         // Update positions of loaded stars based on their velocities
         foreach (var starHip in loadedStars.Keys)
         {
-            foreach (var starData in starDataset)
+            foreach (var starData in loadedStarsArray)
             {
                 if (starData.hip == starHip)
                 {
@@ -294,7 +293,7 @@ public class DynamicRendering : MonoBehaviour
 
                     // Check if the star is within the visible range
                     float distanceToOrigin = Vector3.Distance(userOrigin.position, newPosition);
-                    if (distanceToOrigin <= maxDistance)
+                    if (distanceToOrigin <= maxDistance * velocityDistanceMultiplier)
                     {
                         // Update the position of the loaded star
                         loadedStars[starHip].transform.position = newPosition;
@@ -308,6 +307,7 @@ public class DynamicRendering : MonoBehaviour
 
     void ClearLoadedStars()
     {
+        loadedStarsArray.Clear();
         // Destroy previously loaded stars
         foreach (var star in loadedStars.Values)
         {
@@ -316,17 +316,12 @@ public class DynamicRendering : MonoBehaviour
         loadedStars.Clear();
     }
 
-    void ParseCSV(string filePath)
+    void ParseCSV()
     {
         // Clear existing data
         starDataset.Clear();
 
         //// Read the CSV file
-        //StreamReader reader = new StreamReader(filePath);
-
-        //// Skip the header if exists
-        //reader.ReadLine();
-
         string[] starDataRows = starCsvFile.text.Split('\n');
 
         bool isFirstLine = true;
@@ -362,7 +357,7 @@ public class DynamicRendering : MonoBehaviour
             }
             else
             {
-                Debug.LogError("Invalid data format in CSV");
+                Debug.LogError("Invalid data format in CSV " + values);
             }
         }
 
@@ -383,38 +378,19 @@ public class DynamicRendering : MonoBehaviour
     // Load the star CSV file
     void LoadStarCSV()
     {
-        string filePath = csvFilePath;
-        //if (File.Exists(filePath))
-        //{
-            ParseCSV(filePath);
-        //}
-        //else
-        //{
-        //    Debug.LogError("File does not exist: " + filePath);
-        //}
+        ParseCSV();
     }
 
     // Load the exoplanet CSV file
     void LoadExoplanetCSV()
     {
-        //if (File.Exists(exoplanetCsvFilePath))
-        //{
-            ParseExoplanetCSV(exoplanetCsvFilePath);
-        //}
-        //else
-        //{
-        //    Debug.LogError("Exoplanet CSV file not found: " + exoplanetCsvFilePath);
-        //}
+       ParseExoplanetCSV();
     }
 
     // Parse the exoplanet CSV file and update the starDataset with number of exoplanets
-    void ParseExoplanetCSV(string filePath)
+    void ParseExoplanetCSV()
     {
         //// Read the CSV file
-        //StreamReader reader = new StreamReader(filePath);
-
-        //// Skip the header if exists
-        //reader.ReadLine();
         string[] exoDataRows = exoCsvFile.text.Split('\n');
 
         bool isFirstLine = true;

@@ -8,13 +8,16 @@ public class ConstellationRenderer : MonoBehaviour
     public Transform userOrigin; // Reference to the user's position
     public GameObject dynamicRenderingObject; // Reference to the GameObject containing DynamicRendering script
     public Material lineMaterial; // Material for constellation lines
-    public string filePath = "Assets/constellations.fab"; // Path to the constellations file
     public TextAsset constellationCsvFile; // Reference to the InputField for exoplanet CSV file path
 
+    public TextAsset constellationNamesFile; // Reference to the TextAsset containing constellation names
+    public ConstellationDatasetManager ConstellationDatasetManager;
 
+    private Dictionary<string, string> constellationNameMap = new Dictionary<string, string>(); // Dictionary to store constellation ID and names
     private Dictionary<string, GameObject> loadedStars = new Dictionary<string, GameObject>(); // Dictionary to store loaded stars with hip id as key
     private Dictionary<string, List<GameObject>> constellationLines = new Dictionary<string, List<GameObject>>(); // Dictionary to store constellation lines with constellation id as key
 
+    public List<GameObject> RenderedConstellationCollection = new List<GameObject>();
     public float updateInterval = 5f; // Time interval between position updates
     public float lineWidth = 0.01f;
     private float lastUpdateTime; // Time since the last position update
@@ -113,6 +116,10 @@ public class ConstellationRenderer : MonoBehaviour
                 Destroy(lineObj); // Destroy each line GameObject
             }
         }
+        foreach (GameObject constellationObj in RenderedConstellationCollection)
+        {
+            Destroy(constellationObj);
+        }
         constellationLines.Clear(); // Clear the dictionary
     }
 
@@ -143,116 +150,162 @@ public class ConstellationRenderer : MonoBehaviour
 
     void LoadConstellations()
     {
-        //if (filePath)
-        //{
-            //StreamReader reader = new StreamReader(filePath);
-            int lineNumber = 0;
+        LoadConstellationNames();
 
-            string[] starDataRows = constellationCsvFile.text.Split('\n');
+        constellationCsvFile = ConstellationDatasetManager.GetConstellationFile();
+        int lineNumber = 0;
+        string[] starDataRows = constellationCsvFile.text.Split('\n');
+        bool isFirstLine = true;
 
-            bool isFirstLine = true;
-
-            // Read the rest of the lines
-            foreach (string row in starDataRows)
+        // Read the rest of the lines
+        foreach (string row in starDataRows)
+        {
+            if (isFirstLine)
             {
-                if (isFirstLine)
+                isFirstLine = false;
+                continue;
+            }
+
+        //    while (!reader.EndOfStream)
+        //{
+            lineNumber++;
+            string line = row;
+            string[] values = line.Split(new string[] { "  ", " " }, System.StringSplitOptions.RemoveEmptyEntries);
+            if (values.Length >= 3)
+            {
+                //Debug.Log(constellationNameMap.Keys.ToString() + values[0] + values[0] + values[0].Length);
+                string constellationId = values[0].Trim();
+                if (constellationNameMap.ContainsKey(constellationId))
                 {
-                    isFirstLine = false;
-                    continue;
+                    constellationId = constellationNameMap[constellationId];
+                } else
+                {
+                    Debug.Log(constellationId);
                 }
+                int numLines;
 
-            //    while (!reader.EndOfStream)
-            //{
-                lineNumber++;
-                string line = row;
-                string[] values = line.Split(new string[] { "  ", " " }, System.StringSplitOptions.RemoveEmptyEntries);
-                if (values.Length >= 3)
+                if (int.TryParse(values[1], out numLines)) // Check if numLines is parseable
                 {
-                    string constellationId = values[0];
-                    int numLines;
+                    // Create a new list to store constellation lines
+                    List<GameObject> lines = new List<GameObject>();
 
-                    if (int.TryParse(values[1], out numLines)) // Check if numLines is parseable
+                    // Create a new gameobject for the constellation
+                    GameObject constellation = new GameObject("Constellation_" + constellationId); // Instantiate constellation object
+                    constellation.transform.SetParent(transform); // Set the constellation as a child of this GameObject
+
+                    // Output the constellation id to ensure it's being created
+                    Debug.Log("Constellation created: " + constellation.name);
+
+                    // Add stars and lines as children to the constellation
+                    for (int i = 0; i < numLines; i++)
                     {
-                        // Create a new list to store constellation lines
-                        List<GameObject> lines = new List<GameObject>();
-
-                        // Create a new gameobject for the constellation
-                        GameObject constellation = new GameObject("Constellation_" + constellationId); // Instantiate constellation object
-                        constellation.transform.SetParent(transform); // Set the constellation as a child of this GameObject
-
-                        // Output the constellation id to ensure it's being created
-                        Debug.Log("Constellation created: " + constellation.name);
-
-                        // Add stars and lines as children to the constellation
-                        for (int i = 0; i < numLines; i++)
+                        int star1;
+                        int star2;
+                        if (int.TryParse(values[i * 2 + 2], out star1) && int.TryParse(values[i * 2 + 3], out star2))
                         {
-                            int star1;
-                            int star2;
-                            if (int.TryParse(values[i * 2 + 2], out star1) && int.TryParse(values[i * 2 + 3], out star2))
+                            // Find the star gameobjects with the given IDs
+                            GameObject star1Obj = FindStar(star1.ToString());
+                            GameObject star2Obj = FindStar(star2.ToString());
+
+                            if (star1Obj != null && star2Obj != null)
                             {
-                                // Find the star gameobjects with the given IDs
-                                GameObject star1Obj = FindStar(star1.ToString());
-                                GameObject star2Obj = FindStar(star2.ToString());
+                                // Create a new GameObject for the line
+                                GameObject lineObj = new GameObject("Line_" + i);
+                                lineObj.transform.SetParent(constellation.transform); // Set the line as a child of the constellation
 
-                                if (star1Obj != null && star2Obj != null)
-                                {
-                                    // Create a new GameObject for the line
-                                    GameObject lineObj = new GameObject("Line_" + i);
-                                    lineObj.transform.SetParent(constellation.transform); // Set the line as a child of the constellation
+                                // Add Line Renderer component
+                                LineRenderer lineRenderer = lineObj.AddComponent<LineRenderer>();
+                                lineRenderer.positionCount = 2; // Two points define a line
+                                lineRenderer.material = lineMaterial; // Assign line material
 
-                                    // Add Line Renderer component
-                                    LineRenderer lineRenderer = lineObj.AddComponent<LineRenderer>();
-                                    lineRenderer.positionCount = 2; // Two points define a line
-                                    lineRenderer.material = lineMaterial; // Assign line material
+                                // Set line width
+                                lineRenderer.startWidth = lineWidth;
+                                lineRenderer.endWidth = lineWidth;
+                                //lineRenderer.startColor = Color.white;
+                                //lineRenderer.endColor = Color.white;
 
-                                    // Set line width
-                                    lineRenderer.startWidth = lineWidth;
-                                    lineRenderer.endWidth = lineWidth;
-                                    //lineRenderer.startColor = Color.white;
-                                    //lineRenderer.endColor = Color.white;
+                                // Set initial positions of the line endpoints
+                                lineRenderer.SetPositions(new Vector3[] { star1Obj.transform.position, star2Obj.transform.position });
 
-                                    // Set initial positions of the line endpoints
-                                    lineRenderer.SetPositions(new Vector3[] { star1Obj.transform.position, star2Obj.transform.position });
+                                // Attach LineFollower component to the line GameObject
+                                LineFollower lineFollower = lineObj.AddComponent<LineFollower>();
+                                lineFollower.startPoint = star1Obj.transform;
+                                lineFollower.endPoint = star2Obj.transform;
 
-                                    // Attach LineFollower component to the line GameObject
-                                    LineFollower lineFollower = lineObj.AddComponent<LineFollower>();
-                                    lineFollower.startPoint = star1Obj.transform;
-                                    lineFollower.endPoint = star2Obj.transform;
-
-                                    // Add line object to the list
-                                    lines.Add(lineObj);
-                                }
-                            }
-                            else
-                            {
-                                Debug.LogWarning("Failed to parse star IDs at line " + lineNumber);
+                                // Add line object to the list
+                                lines.Add(lineObj);
                             }
                         }
+                        else
+                        {
+                            Debug.LogWarning("Failed to parse star IDs at line " + lineNumber);
+                        }
+                    }
 
-                        // Add constellation lines to the dictionary
-                        constellationLines.Add(constellationId, lines);
-                    }
-                    else
-                    {
-                        Debug.LogWarning("Failed to parse numLines at line " + lineNumber);
-                    }
+                    // Add constellation lines to the dictionary
+                    constellationLines.Add(constellationId, lines);
+                    RenderedConstellationCollection.Add(constellation);
+                }
+                else
+                {
+                    Debug.LogWarning("Failed to parse numLines at line " + lineNumber);
                 }
             }
-            //}
-
-            //reader.Close();
         }
-        //else
-        //{
-        //    Debug.LogError("Constellations file not found: " + filePath);
-        //}
-    //}
+    }
 
     GameObject FindStar(string hipId)
     {
         GameObject star;
         loadedStars.TryGetValue(hipId, out star);
         return star;
+    }
+
+    void LoadConstellationNames()
+    {
+        constellationNameMap.Clear();
+        constellationNamesFile = ConstellationDatasetManager.GetConstellationNamesFile();
+        if (constellationNamesFile != null)
+        {
+            string[] lines = constellationNamesFile.text.Split('\n');
+
+            foreach (string line in lines)
+            {
+                string[] fields = line.Split('\t');
+
+                if (fields.Length >= 3)
+                {
+                    string constellationID = fields[0];
+                    string constellationName = ExtractName(fields[2]);
+
+                    if (!string.IsNullOrEmpty(constellationID) && !string.IsNullOrEmpty(constellationName))
+                    {
+                        Debug.Log(constellationID + " " + constellationName);
+                        constellationNameMap.Add(constellationID, constellationName);
+                    }
+                }
+            }
+
+            // Now constellationNameMap contains the mapping of constellation ID to names
+        }
+        else
+        {
+            Debug.LogError("Constellation names file not assigned!");
+        }
+    }
+
+    // Function to extract the name from the field containing the name in parentheses
+    private string ExtractName(string field)
+    {
+        int startIndex = field.IndexOf('"') + 1;
+        int endIndex = field.LastIndexOf('"');
+
+        if (startIndex != -1 && endIndex != -1 && endIndex > startIndex)
+        {
+            return field.Substring(startIndex, endIndex - startIndex);
+        }
+
+        return null;
     }
 }
 
