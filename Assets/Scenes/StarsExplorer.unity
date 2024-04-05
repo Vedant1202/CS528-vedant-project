@@ -631,7 +631,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &139229117
 GameObject:
@@ -753,8 +753,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 678989795}
-        m_MethodName: resetLocation
+      - m_Target: {fileID: 1595749823}
+        m_MethodName: ResetPosition
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1043,6 +1043,12 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 272104578}
   m_CullTransparentMesh: 0
+--- !u!1 &291734584 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1000011680592226, guid: c1621f4dd1e8c2748a5a423aa7736d55,
+    type: 3}
+  m_PrefabInstance: {fileID: 494435813}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &328973669
 GameObject:
   m_ObjectHideFlags: 0
@@ -1482,7 +1488,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &367163546
 PrefabInstance:
@@ -1733,7 +1739,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &405549764
 GameObject:
@@ -2204,7 +2210,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &488387216
 GameObject:
@@ -2686,7 +2692,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 622619182}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 678989795}
+        m_MethodName: resetTime
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &622619182
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2892,7 +2909,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 760548651}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1595749823}
+        m_MethodName: StartMovementToTargetConstellation
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!222 &672641811
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3102,12 +3130,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   userOrigin: {fileID: 659383135}
   playerController: {fileID: 62905497}
-  maxDistance: 60
+  maxDistance: 100
   starPrefab: {fileID: 2445308140194108389, guid: 19ce4e336ce9145e8a037251786e7784,
     type: 3}
   startVelocityButton: {fileID: 1272096995}
   stopVelocityButton: {fileID: 423048091}
-  velocityDistanceMultiplier: 0.5
+  velocityDistanceMultiplier: 0.2
   exoCsvFile: {fileID: 4900000, guid: 0cc1aaf8781bc4756b28f22d73b2ad4e, type: 3}
   starCsvFile: {fileID: 4900000, guid: 4c184f8519b894831baf1a3301143576, type: 3}
   positionScaleSlider: {fileID: 358871590}
@@ -3119,6 +3147,7 @@ MonoBehaviour:
   stellarCheckbox: {fileID: 1282044635}
   knownPlanetsCheckbox: {fileID: 1132870083}
   isVelocityNegative: 0
+  activateMoveToAndromeda: 0
 --- !u!4 &678989796
 Transform:
   m_ObjectHideFlags: 0
@@ -3131,7 +3160,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &688899718 stripped
 GameObject:
@@ -3207,7 +3236,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Get additional info on ____
+  m_Text: Go to Andromeda
 --- !u!222 &760548652
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4024,7 +4053,7 @@ Transform:
   m_Children:
   - {fileID: 340603280}
   m_Father: {fileID: 0}
-  m_RootOrder: 12
+  m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1089452734 stripped
 MonoBehaviour:
@@ -5017,7 +5046,7 @@ MonoBehaviour:
   ConstellationDatasetManager: {fileID: 2108033499}
   RenderedConstellationCollection: []
   updateInterval: 5
-  lineWidth: 0.01
+  lineWidth: 0.1
 --- !u!4 &1477772747
 Transform:
   m_ObjectHideFlags: 0
@@ -5030,7 +5059,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 11
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1541141413
 GameObject:
@@ -5113,7 +5142,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1541141416}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1595749823}
+        m_MethodName: ResetRotation
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1541141416
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5300,6 +5340,54 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1579113302}
   m_CullTransparentMesh: 0
+--- !u!1 &1595749822
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1595749824}
+  - component: {fileID: 1595749823}
+  m_Layer: 0
+  m_Name: ObjectMover
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1595749823
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1595749822}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa5a51381ea684a5e8b13e9e0719c4a2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerController: {fileID: 291734584}
+  targetPosition: {x: 16.29, y: -0.3, z: 8.9}
+  targetRotationEulerAngles: {x: 0, y: 59.33, z: 0}
+  duration: 5
+  activate: 0
+--- !u!4 &1595749824
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1595749822}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 37.415077, y: -0.18605483, z: 23.84008}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1615573562
 GameObject:
   m_ObjectHideFlags: 0
@@ -6857,7 +6945,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2136681020
 GameObject:
@@ -7005,7 +7093,7 @@ PrefabInstance:
     - target: {fileID: 5752209171894059484, guid: 19ce4e336ce9145e8a037251786e7784,
         type: 3}
       propertyPath: m_RootOrder
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 5752209171894059484, guid: 19ce4e336ce9145e8a037251786e7784,
         type: 3}

@@ -55,6 +55,7 @@ public class DynamicRendering : MonoBehaviour
     private int velocityDirectionMultiplier = 1;
 
     private int numVelocityCycles = 0;
+    public bool activateMoveToAndromeda = false;
 
     // Start is called before the first frame update
     void Start()
@@ -98,7 +99,12 @@ public class DynamicRendering : MonoBehaviour
         stellarCheckbox.onValueChanged.AddListener(OnStarColorSchemeCheckboxValueChanged);
         knownPlanetsCheckbox.onValueChanged.AddListener(OnStarColorSchemeCheckboxValueChanged);
         OnStarColorSchemeCheckboxValueChanged(true);
-        //Invoke("resetLocation", 15f);
+
+        if (activateMoveToAndromeda)
+        {
+            Invoke("movetoAndromeda", 5f);
+        }
+        //Invoke("resetAll", 25f);
         //resetLocation();
     }
 
@@ -497,10 +503,10 @@ public class DynamicRendering : MonoBehaviour
 
     public void resetLocation ()
     {
-        Debug.Log("Called");
-        playerController.transform.position = originalPosition;
-        //Vector3 currentPosition = userOrigin.transform.position;
-        //MoveToTarget(userOrigin, currentPosition, originalPosition);
+        Debug.Log("Called reset");
+        //playerController.transform.position = originalPosition;
+        Vector3 currentPosition = playerController.transform.position;
+        MoveToTarget(playerController, currentPosition, originalPosition);
     }
 
     IEnumerator MoveToTarget(Transform targetObj, Vector3 startPosition, Vector3 targetPosition)
@@ -514,7 +520,7 @@ public class DynamicRendering : MonoBehaviour
             float t = elapsedTime / resetDuration;
 
             // Interpolate between the start position and target position using Lerp
-            targetObj.position = Vector3.Lerp(startPosition, targetPosition, t);
+            targetObj.transform.position = Vector3.Lerp(startPosition, targetPosition, t);
 
             // Increment the elapsed time
             elapsedTime += Time.deltaTime;
@@ -524,7 +530,13 @@ public class DynamicRendering : MonoBehaviour
         }
 
         // Ensure the object reaches exactly the target position
-        targetObj.position = targetPosition;
+        targetObj.transform.position = targetPosition;
+    }
+
+    public void movetoAndromeda()
+    {
+        Debug.Log("called andro");
+        MoveToTarget(playerController, playerController.transform.position, new Vector3(16.29f, -0.3f, 8.9f));
     }
 
     public void resetOrientation()
