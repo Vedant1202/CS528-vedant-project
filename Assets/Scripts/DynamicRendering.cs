@@ -35,6 +35,7 @@ public class DynamicRendering : MonoBehaviour
     private float lastUpdateTime; // Time of the last update
     public float updateInterval = 5f; // Update interval in seconds
     public float updateVelocityInterval = 2f; // Update interval in seconds
+    public float slowDownMultiplier = 1000;
     private float lastVelocityUpdateTime; // Time of the last velocity update
     public bool startVelocity = false;
 
@@ -55,7 +56,15 @@ public class DynamicRendering : MonoBehaviour
     private int velocityDirectionMultiplier = 1;
 
     private int numVelocityCycles = 0;
-    public bool activateMoveToAndromeda = false;
+    // Define the array with the given numbers
+    private static int[] constellationIds = { 106278, 109074, 109074, 110395, 110395, 110960, 110960, 111497, 111497, 112961, 112961, 114855, 114855, 115438, 109074, 110003, 110003, 109139, 110003, 111123, 111123, 112716, 112716, 113136, 113136, 114341, 102618, 106278 };
+    
+    //public bool activatemoveToHighlightedConstellation = false;
+    //public string highlightedConstellation = "Perseus";
+    //public Vector3 highlightedConstellationPositionVector = new Vector3(16.29f, -0.3f, 8.9f);
+    //public Vector3 highlightedConstellationPositionVector;
+
+    private bool hasStartFunctionCompleted = false;
 
     // Start is called before the first frame update
     void Start()
@@ -98,12 +107,13 @@ public class DynamicRendering : MonoBehaviour
         // Add listeners to detect changes in checkbox states
         stellarCheckbox.onValueChanged.AddListener(OnStarColorSchemeCheckboxValueChanged);
         knownPlanetsCheckbox.onValueChanged.AddListener(OnStarColorSchemeCheckboxValueChanged);
-        OnStarColorSchemeCheckboxValueChanged(true);
+        //OnStarColorSchemeCheckboxValueChanged(true);
 
-        if (activateMoveToAndromeda)
-        {
-            Invoke("movetoAndromeda", 5f);
-        }
+        //if (activatemoveToHighlightedConstellation)
+        //{
+        //    Invoke("moveToHighlightedConstellation", 5f);
+        //}
+        hasStartFunctionCompleted = true;
         //Invoke("resetAll", 25f);
         //resetLocation();
     }
@@ -156,7 +166,7 @@ public class DynamicRendering : MonoBehaviour
                 {
                     numVelocityCycles += 1;
                     UpdateStarsWithVelocity(updateVelocityInterval * numVelocityCycles);
-                    ConstellationRenderer.SendMessage("UpdateConstellations");
+                    //ConstellationRenderer.SendMessage("UpdateConstellations");
                     lastVelocityUpdateTime = Time.time; // Update the last velocity update time
                 }
                 //UpdateStarsWithVelocity(Time.deltaTime);
@@ -180,10 +190,33 @@ public class DynamicRendering : MonoBehaviour
         return shouldUpdate;
     }
 
+    // Function to convert the array into a dictionary
+    public static Dictionary<int, bool> CreateDictionary(int[] array)
+    {
+        Dictionary<int, bool> dict = new Dictionary<int, bool>();
+        foreach (int num in array)
+        {
+            if (!dict.ContainsKey(num))
+            {
+                dict.Add(num, true); // Set a placeholder value (true) for each key
+            }
+        }
+        return dict;
+    }
+
+    // Function to check if a given int is present in the dictionary
+    public static bool IsInConstellationIds(int number, Dictionary<int, bool> dict)
+    {
+        return dict.ContainsKey(number);
+    }
+
     void UpdateStarsWithOriginMovement()
     {
         // Clear previously loaded stars
         ClearLoadedStars();
+
+        //Dictionary<int, bool> constellationDict = new Dictionary<int, bool>();
+        Dictionary<int, bool> constellationDict = CreateDictionary(constellationIds);
 
         // Load stars within maxDistance
         foreach (var starData in starDataset)
@@ -192,8 +225,7 @@ public class DynamicRendering : MonoBehaviour
             float distanceToOrigin = Vector3.Distance(userOrigin.position, starPosition);
             //Debug.Log("Called origin distance" + distanceToOrigin + maxDistance + positionScale);
 
-
-            if (distanceToOrigin <= maxDistance * positionScale)
+            if (distanceToOrigin <= maxDistance * positionScale || IsInConstellationIds(starData.hip, constellationDict))
             {
                 //Debug.Log("Called update origin" + starData.hip);
                 GameObject newStar = Instantiate(starPrefab, starPosition, Quaternion.identity);
@@ -206,7 +238,10 @@ public class DynamicRendering : MonoBehaviour
             }
         }
 
-        ConstellationRenderer.SendMessage("UpdateConstellations");
+        if (hasStartFunctionCompleted)
+        {
+            ConstellationRenderer.SendMessage("UpdateConstellations");
+        }
     }
 
     Color GetColorForSpectType(string spectType)
@@ -265,15 +300,15 @@ public class DynamicRendering : MonoBehaviour
         if (knownPlanetsCheckboxChecked)
         {
             // Color based on numExo
-            if (numExo != null)
-            {
-                return GetColorForNumExo((int)numExo);
-            }
-            else
-            {
-                // Default color if numExo is null
-                return Color.white;
-            }
+            //if (numExo != null)
+            //{
+            return GetColorForNumExo((int)numExo);
+            //}
+            //else
+            //{
+            //    // Default color if numExo is null
+            //    return Color.white;
+            //}
         }
         else if (stellarCheckboxChecked)
         {
@@ -309,33 +344,38 @@ public class DynamicRendering : MonoBehaviour
     void UpdateStarsWithVelocity(float deltaTime)
     {
         // Update positions of loaded stars based on their velocities
-        foreach (var starHip in loadedStars.Keys)
-        {
+        //foreach (var starHip in loadedStars.Keys)
+        //{
             foreach (var starData in loadedStarsArray)
             {
-                if (starData.hip == starHip)
+                //if (starData.hip == starHip)
+                //{
+                
+                float distanceToOrigin = Vector3.Distance(userOrigin.position, loadedStars[starData.hip].transform.position);
+                if (distanceToOrigin <= maxDistance * velocityDistanceMultiplier)
                 {
                     Vector3 velocity = new Vector3(starData.vx, starData.vy, starData.vz);
                     Vector3 newPosition = new Vector3(
-                        starData.x0 + velocity.x * deltaTime * velocityDirectionMultiplier,
-                        starData.y0 + velocity.y * deltaTime * velocityDirectionMultiplier,
-                        starData.z0 + velocity.z * deltaTime * velocityDirectionMultiplier
+                        starData.x0 + velocity.x * deltaTime * velocityDirectionMultiplier / slowDownMultiplier,
+                        starData.y0 + velocity.y * deltaTime * velocityDirectionMultiplier / slowDownMultiplier,
+                        starData.z0 + velocity.z * deltaTime * velocityDirectionMultiplier / slowDownMultiplier
                     );
 
                     // Scale the positions of stars
                     newPosition *= positionScale;
 
                     // Check if the star is within the visible range
-                    float distanceToOrigin = Vector3.Distance(userOrigin.position, newPosition);
-                    if (distanceToOrigin <= maxDistance * velocityDistanceMultiplier)
-                    {
+                    //float distanceToOrigin = Vector3.Distance(userOrigin.position, newPosition);
+                    //if (distanceToOrigin <= maxDistance * velocityDistanceMultiplier)
+                    //{
                         // Update the position of the loaded star
-                        loadedStars[starHip].transform.position = newPosition;
-                    }
-                    break;
+                    Debug.Log(loadedStars[starData.hip]);
+                    loadedStars[starData.hip].transform.position = newPosition;
                 }
+                    //break;
+                //}
             }
-        }
+        //}
     }
 
 
@@ -533,11 +573,12 @@ public class DynamicRendering : MonoBehaviour
         targetObj.transform.position = targetPosition;
     }
 
-    public void movetoAndromeda()
-    {
-        Debug.Log("called andro");
-        MoveToTarget(playerController, playerController.transform.position, new Vector3(16.29f, -0.3f, 8.9f));
-    }
+    //public void moveToHighlightedConstellation()
+    //{
+    //    Debug.Log("called moveToHighlightedConstellation");
+    //    ConstellationRenderer.ModifyConstellation(highlightedConstellation);
+    //    MoveToTarget(playerController, playerController.transform.position, highlightedConstellationPositionVector);
+    //}
 
     public void resetOrientation()
     {

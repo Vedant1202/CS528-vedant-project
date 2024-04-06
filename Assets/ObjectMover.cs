@@ -7,6 +7,8 @@ public class ObjectMover : MonoBehaviour
     public Vector3 targetPosition; // The target position to move towards
     public Vector3 targetRotationEulerAngles; // The target rotation in Euler angles (x, y, z)
     public float duration = 2.0f; // The duration of the movement
+    public ConstellationRenderer ConstellationRenderer;
+    public string highlightedConstellation = "Aquarius";
 
     private bool isMoving = false; // Flag to check if movement is in progress
 
@@ -15,6 +17,7 @@ public class ObjectMover : MonoBehaviour
 
     public bool activate = false;
 
+    // aquarius -0.09776417, -1.119881, -0.0240202
     private void Start()
     {
         initialPosition = playerController.transform.position;
@@ -22,8 +25,9 @@ public class ObjectMover : MonoBehaviour
         if (activate)
         {
             Invoke("StartMovementToTargetConstellation", 10f);
-            Invoke("ResetPosition", 25f);
-            Invoke("ResetRotation", 35f);
+            Invoke("ResetConstellation", 20f);
+            //Invoke("ResetPosition", 25f);
+            //Invoke("ResetRotation", 35f);
         }
     }
 
@@ -31,7 +35,17 @@ public class ObjectMover : MonoBehaviour
     {
         if (!isMoving)
         {
+            ConstellationRenderer.ModifyConstellation(highlightedConstellation);
             StartCoroutine(MoveObject(playerController.transform.position, playerController.transform.rotation, targetPosition, Quaternion.Euler(targetRotationEulerAngles)));
+        }
+    }
+
+    public void ResetConstellation()
+    {
+        if (!isMoving)
+        {
+            ConstellationRenderer.ResetConstellation(highlightedConstellation);
+            //StartCoroutine(MoveObject(playerController.transform.position, playerController.transform.rotation, targetPosition, Quaternion.Euler(targetRotationEulerAngles)));
         }
     }
 

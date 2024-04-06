@@ -22,12 +22,19 @@ public class ConstellationRenderer : MonoBehaviour
     public float lineWidth = 0.01f;
     private float lastUpdateTime; // Time since the last position update
 
+    public float thickLineWidth = 0.02f; // Public variable for thick line width
+    public Color lineColor = Color.blue; // Public variable for line color
+    public float starScaleMultiplier = 1.5f; // Public variable for star scale multiplier
+    //public Color starColor = Color.yellow; // Public variable for star color
+    public Shader starHighlightShader; // Public variable for star shader
+    private Dictionary<string, (float, float, Color)> originalValues = new Dictionary<string, (float, float, Color)>(); // Store original values
+
     void Start()
     {
-        FetchLoadedStars();
+        //FetchLoadedStars();
 
         // Load constellations
-        UpdateConstellations();
+        //UpdateConstellations();
         // Initialize lastUpdateTime
         lastUpdateTime = Time.time;
     }
@@ -42,21 +49,21 @@ public class ConstellationRenderer : MonoBehaviour
         //}
     }
 
-    public void UpdateLinePositionsCaller ()
-    {
-        // Update constellation line positions with the stars' positions
-        foreach (var pair in constellationLines)
-        {
-            foreach (GameObject lineObj in pair.Value)
-            {
-                LineFollower lineFollower = lineObj.GetComponent<LineFollower>();
-                if (lineFollower != null)
-                {
-                    UpdateLinePositions(lineFollower, pair.Key);
-                }
-            }
-        }
-    }
+    //public void UpdateLinePositionsCaller ()
+    //{
+    //    // Update constellation line positions with the stars' positions
+    //    foreach (var pair in constellationLines)
+    //    {
+    //        foreach (GameObject lineObj in pair.Value)
+    //        {
+    //            LineFollower lineFollower = lineObj.GetComponent<LineFollower>();
+    //            if (lineFollower != null)
+    //            {
+    //                UpdateLinePositions(lineFollower, pair.Key);
+    //            }
+    //        }
+    //    }
+    //}
 
     // Update constellation positions based on user's origin position
     public void UpdateConstellations()
@@ -123,33 +130,34 @@ public class ConstellationRenderer : MonoBehaviour
         constellationLines.Clear(); // Clear the dictionary
     }
 
-    void UpdateLinePositions(LineFollower lineFollower, string constellationId)
-    {
-        Debug.Log("update line positions called");
-        if (constellationId != null && lineFollower != null)
-        {
-            GameObject star1Obj = FindStar(constellationId);
-            GameObject star2Obj = FindStar(constellationId);
+    //void UpdateLinePositions(LineFollower lineFollower, string constellationId)
+    //{
+    //    Debug.Log("update line positions called");
+    //    if (constellationId != null && lineFollower != null)
+    //    {
+    //        GameObject star1Obj = FindStar(constellationId);
+    //        GameObject star2Obj = FindStar(constellationId);
 
-            if (star1Obj != null && star2Obj != null)
-            {
-                // Update line start and end points
-                lineFollower.startPoint = star1Obj.transform;
-                lineFollower.endPoint = star2Obj.transform;
+    //        if (star1Obj != null && star2Obj != null)
+    //        {
+    //            // Update line start and end points
+    //            lineFollower.startPoint = star1Obj.transform;
+    //            lineFollower.endPoint = star2Obj.transform;
 
-                // Update line renderer positions
-                LineRenderer lineRenderer = lineFollower.GetComponent<LineRenderer>();
-                if (lineRenderer != null)
-                {
-                    lineRenderer.SetPosition(0, star1Obj.transform.position);
-                    lineRenderer.SetPosition(1, star2Obj.transform.position);
-                }
-            }
-        }
-    }
+    //            // Update line renderer positions
+    //            LineRenderer lineRenderer = lineFollower.GetComponent<LineRenderer>();
+    //            if (lineRenderer != null)
+    //            {
+    //                lineRenderer.SetPosition(0, star1Obj.transform.position);
+    //                lineRenderer.SetPosition(1, star2Obj.transform.position);
+    //            }
+    //        }
+    //    }
+    //}
 
     void LoadConstellations()
     {
+        Debug.Log("Load Constellations Called");
         LoadConstellationNames();
 
         //constellationCsvFile = ConstellationDatasetManager.GetConstellationFile();
@@ -308,6 +316,107 @@ public class ConstellationRenderer : MonoBehaviour
         }
 
         return null;
+    }
+
+    private void StoreOriginalValues(GameObject lineObj)
+    {
+        LineRenderer lineRenderer = lineObj.GetComponent<LineRenderer>();
+        if (lineRenderer != null)
+        {
+            originalValues[lineObj.name] = (lineRenderer.startWidth, lineRenderer.endWidth, lineRenderer.material.color);
+        }
+
+        // You can add more properties to store if needed
+    }
+
+    public void ResetConstellation(string constellationName)
+    {
+        if (constellationLines.ContainsKey(constellationName))
+        {
+            List<GameObject> lines = constellationLines[constellationName];
+
+            foreach (GameObject lineObj in lines)
+            {
+                if (originalValues.ContainsKey(lineObj.name))
+                {
+                    // Reset to original values
+                    (float originalStartWidth, float originalEndWidth, Color originalColor) = originalValues[lineObj.name];
+
+                    LineRenderer lineRenderer = lineObj.GetComponent<LineRenderer>();
+                    if (lineRenderer != null)
+                    {
+                        lineRenderer.startWidth = originalStartWidth;
+                        lineRenderer.endWidth = originalEndWidth;
+                        lineRenderer.material.color = originalColor;
+                    }
+
+                    // Reset other properties as needed
+                }
+            }
+
+            // Optionally, you can remove the entries from originalValues dictionary
+            originalValues.Remove(constellationName);
+        }
+        else
+        {
+            Debug.LogWarning("Constellation not found: " + constellationName);
+        }
+    }
+
+    public void ModifyConstellation(string constellationName)
+    {
+        if (constellationLines.ContainsKey(constellationName))
+        {
+            List<GameObject> lines = constellationLines[constellationName];
+
+            foreach (GameObject lineObj in lines)
+            {
+                // Store original values
+                StoreOriginalValues(lineObj);
+                // Adjust line width
+                LineRenderer lineRenderer = lineObj.GetComponent<LineRenderer>();
+                if (lineRenderer != null)
+                {
+                    Debug.Log("found linerendered" + lineRenderer.material.color);
+                    lineRenderer.startWidth = thickLineWidth;
+                    lineRenderer.endWidth = thickLineWidth;
+                    lineRenderer.material.color = lineColor; // Apply line color
+                }
+
+                // Adjust start and end points
+                LineFollower lineFollower = lineObj.GetComponent<LineFollower>();
+                if (lineFollower != null)
+                {
+                    if (lineFollower.startPoint != null)
+                    {
+                        lineFollower.startPoint.localScale *= starScaleMultiplier; // Scale start point
+                        ApplyStarShader(lineFollower.startPoint.gameObject); // Apply star shader
+                    }
+                    if (lineFollower.endPoint != null)
+                    {
+                        lineFollower.endPoint.localScale *= starScaleMultiplier; // Scale end point
+                        ApplyStarShader(lineFollower.endPoint.gameObject); // Apply star shader
+                    }
+                }
+            }
+        }
+        else
+        {
+            Debug.LogWarning("Constellation not found: " + constellationName);
+        }
+    }
+
+    private void ApplyStarShader(GameObject starObject)
+    {
+        Renderer starRenderer = starObject.GetComponent<Renderer>();
+        if (starRenderer != null)
+        {
+            starRenderer.material.shader = starHighlightShader; // Assign star shader
+        }
+        else
+        {
+            Debug.LogWarning("Renderer component not found on star GameObject: " + starObject.name);
+        }
     }
 }
 
