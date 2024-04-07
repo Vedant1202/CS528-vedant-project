@@ -1,0 +1,64 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vedant's CS528 Virtual Reality Project Page</title>
+
+    <link rel="stylesheet" href="./web-resources/bootstrap.min.css">
+    <link rel="stylesheet" href="./css/index.css">
+</head>
+<body>
+    <script src="./web-resources/bootstrap.bundle.min.js"></script>
+    <script src="./web-resources/particles.min.js"></script>
+
+    <div id="particles-js"></div>
+
+    <div class="row mt-5 mb-5 pb-5">
+        <div class="col-md-2"></div>
+        <div class="col-md-8 p-5 pt-0">
+            <h1 class="display-4">Vedant's CS 528 Virtual Reality Project</h1>
+            <p class="lead mt-4">
+                Hi, I am Vedant Nandoskar! This webpage contains details about my project for CS 528 - Virtual Reality
+                 course conducted in Spring 2024 semester at UIC.
+            </p>
+            <h1 class="display-6 mt-5">Github project</h1>
+            <p class="lead">
+                <a target="_blank" href="https://github.com/Vedant1202/CS528-vedant-project">https://github.com/Vedant1202/CS528-vedant-project</a>
+            </p>
+            <h1 class="display-6 mt-5">Video</h1>
+            <p class="lead">
+                <p class="lead">
+                    In the video, you can see in the CAVE simulator that the stars are rendered as cubes, and the constellation lines are in purple.
+                </p>
+                <video controls width="480">
+                    <source src="./web-resources/demo.mov" type="video/mp4" />
+                  
+                    Download the
+                    <a href="./web-resources/demo.mov">MOV</a>
+                    video.
+                </video>
+            </p>
+            <h1 class="display-6 mt-5">Instructions to run the project</h1>
+            <p class="lead">
+                To run the project, you should have <a target="_blank" href="https://unity.com/releases/editor/whats-new/2019.4.11">Unity 2019.9.11</a>
+                 and follow the steps below -
+                <ol class="lead">
+                    <li>Clone the repository from the above Github link</li>
+                    <li>Load the repository into unity as a project</li>
+                    <li>Open the project in unity</li>
+                    <li>Open the scene located at <code>Assets/Scenes/StarsExplorer</code></li>
+                    <li>Run the project</li>
+                </ol>  
+            </p>
+            <p class="lead">
+                You should see the scene in action. For now, to maintain the frame rates, I have only loaded the first 10k rows of the star
+                data (because stars < 25 light years were far too less).
+            </p>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+    <script src="./js/index.js"></script>
+</body>
+</html>
