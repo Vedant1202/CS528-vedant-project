@@ -431,7 +431,7 @@ public class DynamicRendering : MonoBehaviour
             }
             else
             {
-                Debug.LogError("Invalid data format in CSV " + values);
+                Debug.LogWarning("Invalid data format in CSV " + values);
             }
         }
 
