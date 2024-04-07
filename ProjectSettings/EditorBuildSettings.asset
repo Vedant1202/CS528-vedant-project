@@ -5,12 +5,6 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
-    path: Assets/module-omicron/CAVE2/Scenes/Cube World Example.unity
-    guid: 0099e9c4b9e8ca84b9a865160581a2c7
-  - enabled: 0
-    path: Assets/module-omicron/CAVE2/Scenes/Tests/CAVE2 Performance Test.unity
-    guid: 0dacb6130eb38c841851cf75163d2006
   - enabled: 1
     path: Assets/Scenes/StarsExplorer.unity
     guid: b4a5e0cef07964865aa6220a18ac7e2b

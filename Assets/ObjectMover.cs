@@ -8,6 +8,7 @@ public class ObjectMover : MonoBehaviour
     public Vector3 targetRotationEulerAngles; // The target rotation in Euler angles (x, y, z)
     public float duration = 2.0f; // The duration of the movement
     public ConstellationRenderer ConstellationRenderer;
+    public DynamicRendering DynamicRendering;
     public string highlightedConstellation = "Aquarius";
 
     private bool isMoving = false; // Flag to check if movement is in progress
@@ -63,6 +64,14 @@ public class ObjectMover : MonoBehaviour
         {
             StartCoroutine(MoveObject(playerController.transform.position, playerController.transform.rotation, playerController.transform.position, initialRotation));
         }
+    }
+
+    public void ResetAll()
+    {
+        ResetConstellation();
+        ResetPosition();
+        ResetRotation();
+        DynamicRendering.resetTime();
     }
 
     IEnumerator MoveObject(Vector3 currentPosition, Quaternion currentRotation, Vector3 targetPosition, Quaternion targetRotation)

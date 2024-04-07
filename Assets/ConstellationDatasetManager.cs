@@ -38,6 +38,8 @@ public class ConstellationDatasetManager : MonoBehaviour
 
     public ConstellationRenderer ConstellationRenderer;
 
+    private bool isNullSelected = false;
+
     void Start()
     {
         // Populate the dataset map
@@ -90,6 +92,7 @@ public class ConstellationDatasetManager : MonoBehaviour
         }
         else
         {
+            //SelectedConstellationDataset = ConstellationDataset();
             Debug.LogError("Invalid dataset name: " + datasetName);
         }
 
@@ -106,7 +109,7 @@ public class ConstellationDatasetManager : MonoBehaviour
 
     public void ToggleAztec(bool isOn)
     {
-        Debug.Log("called aztec");
+        //Debug.Log("called aztec");
         if (isOn)
         {
             SetSelectedConstellationDataset("aztec");
@@ -145,9 +148,20 @@ public class ConstellationDatasetManager : MonoBehaviour
         }
     }
 
+    public void ToggleNone(bool isOn)
+    {
+       isNullSelected = isOn;
+       ConstellationRenderer.SendMessage("UpdateConstellations");
+    }
+
     public string[] GetConstellationFile()
     {
         (string[], string[]) dataset;
+        if (isNullSelected)
+        {
+            string[] empty = new string[] { };
+            return empty;
+        }
         if (datasetMap.TryGetValue(SelectedConstellationDataset, out dataset))
         {
             return dataset.Item1;
@@ -162,6 +176,11 @@ public class ConstellationDatasetManager : MonoBehaviour
     public string[] GetConstellationNamesFile()
     {
         (string[], string[]) dataset;
+        if (isNullSelected)
+        {
+            string[] empty = new string[] { };
+            return empty;
+        }
         if (datasetMap.TryGetValue(SelectedConstellationDataset, out dataset))
         {
             return dataset.Item2;

@@ -8,9 +8,9 @@ public class ConstellationRenderer : MonoBehaviour
     public Transform userOrigin; // Reference to the user's position
     public GameObject dynamicRenderingObject; // Reference to the GameObject containing DynamicRendering script
     public Material lineMaterial; // Material for constellation lines
-    public TextAsset constellationCsvFile; // Reference to the InputField for exoplanet CSV file path
+    //public TextAsset constellationCsvFile; // Reference to the InputField for exoplanet CSV file path
+    //public TextAsset constellationNamesFile; // Reference to the TextAsset containing constellation names
 
-    public TextAsset constellationNamesFile; // Reference to the TextAsset containing constellation names
     public ConstellationDatasetManager ConstellationDatasetManager;
 
     private Dictionary<string, string> constellationNameMap = new Dictionary<string, string>(); // Dictionary to store constellation ID and names
