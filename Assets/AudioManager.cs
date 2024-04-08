@@ -22,19 +22,6 @@ public class AudioManager : MonoBehaviour
         PlayCurrentAudio();
     }
 
-    void Update()
-    {
-        // Check if the current audio has finished playing
-        //if (!IsAudioPlaying())
-        //{
-        //    // Switch to the next audio source
-        //    SwitchToNextAudio();
-        //    // Play the new current audio
-        //    PlayCurrentAudio();
-        //}
-
-    }
-
     public void SwitchToNextAudio()
     {
         // Cycle through the audio sources
@@ -94,11 +81,5 @@ public class AudioManager : MonoBehaviour
             default:
                 return "Unknown";
         }
-    }
-
-    private bool IsAudioPlaying()
-    {
-        // Check if any of the audio sources is playing
-        return calmAudioSource.isPlaying || upbeatAudioSource.isPlaying || kenAudioSource.isPlaying;
     }
 }

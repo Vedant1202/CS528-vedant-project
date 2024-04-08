@@ -16,20 +16,11 @@ public class ObjectMover : MonoBehaviour
     private Vector3 initialPosition; // Initial position of the object
     private Quaternion initialRotation; // Initial rotation of the object
 
-    public bool activate = false;
-
     // aquarius -0.09776417, -1.119881, -0.0240202
     private void Start()
     {
         initialPosition = playerController.transform.position;
         initialRotation = playerController.transform.rotation;
-        if (activate)
-        {
-            Invoke("StartMovementToTargetConstellation", 10f);
-            Invoke("ResetConstellation", 20f);
-            //Invoke("ResetPosition", 25f);
-            //Invoke("ResetRotation", 35f);
-        }
     }
 
     public void StartMovementToTargetConstellation()
@@ -46,7 +37,6 @@ public class ObjectMover : MonoBehaviour
         if (!isMoving)
         {
             ConstellationRenderer.ResetConstellation(highlightedConstellation);
-            //StartCoroutine(MoveObject(playerController.transform.position, playerController.transform.rotation, targetPosition, Quaternion.Euler(targetRotationEulerAngles)));
         }
     }
 

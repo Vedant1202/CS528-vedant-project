@@ -51,16 +51,7 @@ public class ConstellationDatasetManager : MonoBehaviour
         datasetMap.Add(ConstellationDataset.Maya, (GetLines(mayaConstellationFile), GetLines(mayaConstellationNamesFile)));
 
         // Set default dataset
-        //Debug.Log(ConstellationDataset.Keys());
         ToggleModern(true);
-        // Iterate over each enum value and print its name
-        //foreach (ConstellationDataset dataset in Enum.GetValues(typeof(ConstellationDataset)))
-        //{
-        //    Debug.Log(dataset);
-        //}
-        //SelectedConstellationDataset = ConstellationDataset.Modern;
-
-        //Invoke("ToggleAztec", 5f);
     }
 
     string[] GetLines(TextAsset textAsset)
@@ -109,7 +100,6 @@ public class ConstellationDatasetManager : MonoBehaviour
 
     public void ToggleAztec(bool isOn)
     {
-        //Debug.Log("called aztec");
         if (isOn)
         {
             SetSelectedConstellationDataset("aztec");

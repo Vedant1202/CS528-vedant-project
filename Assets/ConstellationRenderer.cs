@@ -8,8 +8,6 @@ public class ConstellationRenderer : MonoBehaviour
     public Transform userOrigin; // Reference to the user's position
     public GameObject dynamicRenderingObject; // Reference to the GameObject containing DynamicRendering script
     public Material lineMaterial; // Material for constellation lines
-    //public TextAsset constellationCsvFile; // Reference to the InputField for exoplanet CSV file path
-    //public TextAsset constellationNamesFile; // Reference to the TextAsset containing constellation names
 
     public ConstellationDatasetManager ConstellationDatasetManager;
 
@@ -20,50 +18,16 @@ public class ConstellationRenderer : MonoBehaviour
     public List<GameObject> RenderedConstellationCollection = new List<GameObject>();
     public float updateInterval = 5f; // Time interval between position updates
     public float lineWidth = 0.01f;
-    private float lastUpdateTime; // Time since the last position update
 
     public float thickLineWidth = 0.02f; // Public variable for thick line width
     public Color lineColor = Color.blue; // Public variable for line color
     public float starScaleMultiplier = 1.5f; // Public variable for star scale multiplier
-    //public Color starColor = Color.yellow; // Public variable for star color
     public Shader starHighlightShader; // Public variable for star shader
     private Dictionary<string, (float, float, Color)> originalValues = new Dictionary<string, (float, float, Color)>(); // Store original values
 
     void Start()
     {
-        //FetchLoadedStars();
-
-        // Load constellations
-        //UpdateConstellations();
-        // Initialize lastUpdateTime
-        lastUpdateTime = Time.time;
     }
-
-    void Update()
-    {
-        // Check if it's time to update constellation positions
-        //if (Time.time - lastUpdateTime >= updateInterval)
-        //{
-        //    UpdateConstellations();
-        //    lastUpdateTime = Time.time; // Update lastUpdateTime
-        //}
-    }
-
-    //public void UpdateLinePositionsCaller ()
-    //{
-    //    // Update constellation line positions with the stars' positions
-    //    foreach (var pair in constellationLines)
-    //    {
-    //        foreach (GameObject lineObj in pair.Value)
-    //        {
-    //            LineFollower lineFollower = lineObj.GetComponent<LineFollower>();
-    //            if (lineFollower != null)
-    //            {
-    //                UpdateLinePositions(lineFollower, pair.Key);
-    //            }
-    //        }
-    //    }
-    //}
 
     // Update constellation positions based on user's origin position
     public void UpdateConstellations()
@@ -130,34 +94,8 @@ public class ConstellationRenderer : MonoBehaviour
         constellationLines.Clear(); // Clear the dictionary
     }
 
-    //void UpdateLinePositions(LineFollower lineFollower, string constellationId)
-    //{
-    //    Debug.Log("update line positions called");
-    //    if (constellationId != null && lineFollower != null)
-    //    {
-    //        GameObject star1Obj = FindStar(constellationId);
-    //        GameObject star2Obj = FindStar(constellationId);
-
-    //        if (star1Obj != null && star2Obj != null)
-    //        {
-    //            // Update line start and end points
-    //            lineFollower.startPoint = star1Obj.transform;
-    //            lineFollower.endPoint = star2Obj.transform;
-
-    //            // Update line renderer positions
-    //            LineRenderer lineRenderer = lineFollower.GetComponent<LineRenderer>();
-    //            if (lineRenderer != null)
-    //            {
-    //                lineRenderer.SetPosition(0, star1Obj.transform.position);
-    //                lineRenderer.SetPosition(1, star2Obj.transform.position);
-    //            }
-    //        }
-    //    }
-    //}
-
     void LoadConstellations()
     {
-        Debug.Log("Load Constellations Called");
         LoadConstellationNames();
 
         //constellationCsvFile = ConstellationDatasetManager.GetConstellationFile();
@@ -175,21 +113,18 @@ public class ConstellationRenderer : MonoBehaviour
                 continue;
             }
 
-        //    while (!reader.EndOfStream)
-        //{
             lineNumber++;
             string line = row;
             string[] values = line.Split(new string[] { "  ", " " }, System.StringSplitOptions.RemoveEmptyEntries);
             if (values.Length >= 3)
             {
-                //Debug.Log(constellationNameMap.Keys.ToString() + values[0] + values[0] + values[0].Length);
                 string constellationId = values[0].Trim();
                 if (constellationNameMap.ContainsKey(constellationId))
                 {
                     constellationId = constellationNameMap[constellationId];
                 } else
                 {
-                    Debug.Log(constellationId);
+                    //Debug.Log(constellationId); // constellation name not found
                 }
                 int numLines;
 
@@ -201,9 +136,6 @@ public class ConstellationRenderer : MonoBehaviour
                     // Create a new gameobject for the constellation
                     GameObject constellation = new GameObject("Constellation_" + constellationId); // Instantiate constellation object
                     constellation.transform.SetParent(transform); // Set the constellation as a child of this GameObject
-
-                    // Output the constellation id to ensure it's being created
-                    Debug.Log("Constellation created: " + constellation.name);
 
                     // Add stars and lines as children to the constellation
                     for (int i = 0; i < numLines; i++)
@@ -230,8 +162,6 @@ public class ConstellationRenderer : MonoBehaviour
                                 // Set line width
                                 lineRenderer.startWidth = lineWidth;
                                 lineRenderer.endWidth = lineWidth;
-                                //lineRenderer.startColor = Color.white;
-                                //lineRenderer.endColor = Color.white;
 
                                 // Set initial positions of the line endpoints
                                 lineRenderer.SetPositions(new Vector3[] { star1Obj.transform.position, star2Obj.transform.position });
@@ -273,35 +203,24 @@ public class ConstellationRenderer : MonoBehaviour
     void LoadConstellationNames()
     {
         constellationNameMap.Clear();
-        //constellationNamesFile = ConstellationDatasetManager.GetConstellationNamesFile();
-        //if (constellationNamesFile != null)
-        //{
-        //string[] lines = constellationNamesFile.text.Split('\n');
         string[] lines = ConstellationDatasetManager.GetConstellationNamesFile();
 
         foreach (string line in lines)
+        {
+            string[] fields = line.Split('\t');
+
+            if (fields.Length >= 3)
             {
-                string[] fields = line.Split('\t');
+                string constellationID = fields[0];
+                string constellationName = ExtractName(fields[2]);
 
-                if (fields.Length >= 3)
+                if (!string.IsNullOrEmpty(constellationID) && !string.IsNullOrEmpty(constellationName))
                 {
-                    string constellationID = fields[0];
-                    string constellationName = ExtractName(fields[2]);
-
-                    if (!string.IsNullOrEmpty(constellationID) && !string.IsNullOrEmpty(constellationName))
-                    {
-                        Debug.Log(constellationID + " " + constellationName);
-                        constellationNameMap.Add(constellationID, constellationName);
-                    }
+                    Debug.Log(constellationID + " " + constellationName);
+                    constellationNameMap.Add(constellationID, constellationName);
                 }
             }
-
-            // Now constellationNameMap contains the mapping of constellation ID to names
-        //}
-        //else
-        //{
-        //    Debug.LogError("Constellation names file not assigned!");
-        //}
+        }
     }
 
     // Function to extract the name from the field containing the name in parentheses
@@ -325,8 +244,6 @@ public class ConstellationRenderer : MonoBehaviour
         {
             originalValues[lineObj.name] = (lineRenderer.startWidth, lineRenderer.endWidth, lineRenderer.material.color);
         }
-
-        // You can add more properties to store if needed
     }
 
     public void ResetConstellation(string constellationName)
@@ -349,12 +266,10 @@ public class ConstellationRenderer : MonoBehaviour
                         lineRenderer.endWidth = originalEndWidth;
                         lineRenderer.material.color = originalColor;
                     }
-
-                    // Reset other properties as needed
                 }
             }
 
-            // Optionally, you can remove the entries from originalValues dictionary
+            // remove the entries from originalValues dictionary
             originalValues.Remove(constellationName);
         }
         else
@@ -377,7 +292,6 @@ public class ConstellationRenderer : MonoBehaviour
                 LineRenderer lineRenderer = lineObj.GetComponent<LineRenderer>();
                 if (lineRenderer != null)
                 {
-                    Debug.Log("found linerendered" + lineRenderer.material.color);
                     lineRenderer.startWidth = thickLineWidth;
                     lineRenderer.endWidth = thickLineWidth;
                     lineRenderer.material.color = lineColor; // Apply line color

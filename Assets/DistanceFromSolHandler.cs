@@ -8,7 +8,6 @@ public class DistanceFromSolHandler : MonoBehaviour
 {
     public Transform origin; // Reference to the original position
     private Vector3 originalPosition; // Original position of the GameObject
-    //private float distanceFromSol;
     public string displayText = "Distance from sol is xxx parsecs";
     public Text text;
     public float updateInterval = 1f; // Set the delay in seconds
@@ -21,12 +20,6 @@ public class DistanceFromSolHandler : MonoBehaviour
         StartCoroutine(UpdateDisplayText());
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
     private IEnumerator UpdateDisplayText()
     {
         // Loop infinitely
@@ -37,7 +30,6 @@ public class DistanceFromSolHandler : MonoBehaviour
 
             string[] parts = displayText.Split(new string[] { "xxx" }, StringSplitOptions.None);
             string output = parts[0] + distance.ToString("F2") + parts[1];
-            //Debug.Log(output);
             text.text = output;
 
             // Wait for the specified interval before calculating distance again
@@ -45,5 +37,4 @@ public class DistanceFromSolHandler : MonoBehaviour
         }
     }
 
-    //private IEnumerator UpdateDisplayText()
 }
