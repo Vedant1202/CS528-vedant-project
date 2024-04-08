@@ -57,9 +57,34 @@
         <div class="col-md-8 p-5 pt-0">
             <h1 class="display-6 mt-5">What's interesting</h1>
             <p class="lead">
-                <p class="lead">
-                    Blah blah blah
-                </p>
+                <ul>
+                    <li>
+                        <i>Dynamic Rendering</i> <br>
+                        I have used dynamic rendering which renders stars only within a set distance (default value is 100).
+                        When the user moves outside this distance, the stars are rendered again based on this threshold.
+                        I have used this to optimize for runtime FPS stability.
+                    </li>
+                    <br>
+                    <li>
+                        <i>Movement of constellations</i> <br>
+                        I have used a Line Follower mechanism which removes the need to update the constellations when velocity of 
+                        stars is toggled. The lines move according to the movement of its start and end points.
+                    </li>
+                    <br>
+                    <li>
+                        <i>Highlighting constellation</i> <br>
+                        I have also highlighted the constellation with additional info, in this case Aquarius, in green when you 
+                        click on the "Constellation Info" button in main menu. This is so that you can easily distinguish Aquarius 
+                        from other constellations.
+                    </li>
+                    <br>
+                    <li>
+                        <i>Choice of music</i> <br>
+                        I have added three tracks to the background music which you can switch from the main menu - 
+                        Calm music, Upbeat music, and (if you're in the mood for it)... I'm just ken song from Ryan Gosling's Oscars performance ;)
+
+                    </li>
+                </ul>
             </p>
         </div>
         <div class="col-md-2"></div>
