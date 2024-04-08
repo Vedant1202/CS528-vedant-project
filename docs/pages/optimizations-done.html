@@ -60,6 +60,7 @@
                 <ul>
                     <li>
                         <i>Dynamic Rendering</i> <br>
+                        <img src="../resources/dynamic-rendering.gif" class="img-fluid image-md" alt="dynamic rendering gif"> <br>
                         I have used dynamic rendering which renders stars only within a set distance (default value is 100).
                         When the user moves outside this distance, the stars are rendered again based on this threshold.
                         I have used this to optimize for runtime FPS stability.
@@ -67,12 +68,14 @@
                     <br>
                     <li>
                         <i>Movement of constellations</i> <br>
+                        <img src="../resources/constellation-movement.gif" class="img-fluid image-md" alt="constellation movement gif"> <br>
                         I have used a Line Follower mechanism which removes the need to update the constellations when velocity of 
                         stars is toggled. The lines move according to the movement of its start and end points.
                     </li>
                     <br>
                     <li>
                         <i>Shader for Billboards</i> <br>
+                        <img src="../resources/shader.gif" class="img-fluid image-md" alt="billboard shader gif"> <br>
                         I have used a shader titled "3D Text Shader (Billboard)" that makes the 2D Quad object (which I've used to represent a star) look like a 3D object.
                         I got this result by also applying a texture of the particles system to the shader material.
                         It reduced the need to make the quads face the user at all times hence removing the load of adding that logic and computation.
