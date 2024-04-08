@@ -62,12 +62,58 @@
                     <ul>
                         <li>
                             <b>Stars</b> <br>
-                            I got the stars dataset from <a href="https://github.com/astronexus/ATHYG-Database" target="_blank" rel="noopener noreferrer">ATHYG-Database</a>.
-                            The file I used was titled as <i>"athyg_31_reduced_m10.csv"</i>. I then used a <a href="https://colab.google/" target="_blank" rel="noopener noreferrer">Google Colab</a> notebook to preprocess the data.
-                            For preprocessing, I first got rid of all columns except those which were required ie, hip, dist, x0, y0, z0, mag, absmag, vx, vy, vz, spect.
-                            
-                        </li>. 
-
+                            <ul>
+                                <li>
+                                    I got the stars dataset from <a href="https://github.com/astronexus/ATHYG-Database" target="_blank" rel="noopener noreferrer">ATHYG-Database</a>.
+                                </li>
+                                <li>
+                                    The file I used was titled as <i>"athyg_31_reduced_m10.csv"</i>. I then used a <a href="https://colab.google/" target="_blank" rel="noopener noreferrer">Google Colab</a> notebook to preprocess the data.        
+                                </li>
+                                <li>
+                                    For preprocessing, I first got rid of all columns except those which were required ie, hip, dist, x0, y0, z0, mag, absmag, vx, vy, vz, spect.
+                                </li>
+                                <li>
+                                    I then removed any null values in these items.
+                                </li>
+                                <li>
+                                    Further, I converted the distance and velocities vx, vy, vz to be in parsecs.
+                                </li>
+                                <li>
+                                    Finally, I formatted the "spect" values to only represent OBAFKGM letters.
+                                </li>
+                            </ul>    
+                        </li>
+                        <br>
+                        <li>
+                            <b>Exoplanets</b> <br>
+                            <ul>
+                                <li>
+                                    I got the explonets dataset from <a href="https://exoplanetarchive.ipac.caltech.edu/cgi-bin/TblView/nph-tblView?app=ExoTbls&config=PS" target="_blank" rel="noopener noreferrer">Exoplanet Archive</a>.
+                                </li>
+                                <li>
+                                    I filtered the columsn to only keep the HIP IDs and Number of exoplanets.        
+                                </li>
+                                <li>
+                                    For preprocessing, I dropped the duplicates.
+                                </li>
+                            </ul>    
+                        </li>
+                        <br>
+                        <li>
+                            <b>Constellations</b> <br>
+                            <ul>
+                                <li>
+                                    I got the constellations datasets from <a href="https://github.com/Stellarium/stellarium/tree/master/skycultures" target="_blank" rel="noopener noreferrer">Stellarium</a>.
+                                </li>
+                                <li>
+                                    I downloaded the constellationship.fab and constellation_names.fab files from the following collections -
+                                    Aztec, Modern, Maya, Chinese, Egyptian, and Norse.       
+                                </li>
+                                <li>
+                                    I did not preprocess these, I used them as text assets directly and mapped them to the HIP IDs in the star dataset inside the unity environment.
+                                </li>
+                            </ul>    
+                        </li>
                     </ul>
                 </p>
             </p>
