@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vedant's CS528 Virtual Reality Project Page</title>
+
+    <link rel="stylesheet" href="../web-resources/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/index.css">
+</head>
+
+<body>
+    <script src="../web-resources/bootstrap.bundle.min.js"></script>
+    <script src="../web-resources/particles.min.js"></script>
+
+    <!-- NAVBAR -->
+
+    <nav class="navbar sticky-top p-3 navbar-bg navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="../index.html">Stars Explorer</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <!-- <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">How to use</a>
+                    </li> -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="./how-to-use.html">How to use</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">Data used</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="./how-to-install.html">How to install</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="./whats-interesting.html">What's interesting</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="./optimizations-done.html">Optimizations done</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- NAVBAR END -->
+    <div id="particles-js"></div>
+
+    <div class="row mt-5 mb-5 pb-5">
+        <div class="col-md-2"></div>
+        <div class="col-md-8 p-5 pt-0">
+            <h1 class="display-6 mt-5">Data Used</h1>
+            <p class="lead">
+                <p class="lead">
+                    The following data sources were used to construct this application
+                    <ul>
+                        <li>
+                            <b>Stars</b> <br>
+                            I got the stars dataset from <a href="https://github.com/astronexus/ATHYG-Database" target="_blank" rel="noopener noreferrer">ATHYG-Database</a>.
+                            The file I used was titled as <i>"athyg_31_reduced_m10.csv"</i>. I then used a <a href="https://colab.google/" target="_blank" rel="noopener noreferrer">Google Colab</a> notebook to preprocess the data.
+                            For preprocessing, I first got rid of all columns except those which were required ie, hip, dist, x0, y0, z0, mag, absmag, vx, vy, vz, spect.
+                            
+                        </li>. 
+
+                    </ul>
+                </p>
+            </p>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+    <script src="../js/index.js"></script>
+</body>
+
+</html>

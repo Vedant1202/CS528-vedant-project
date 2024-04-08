@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vedant's CS528 Virtual Reality Project Page</title>
+
+    <link rel="stylesheet" href="../web-resources/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/index.css">
+</head>
+
+<body>
+    <script src="../web-resources/bootstrap.bundle.min.js"></script>
+    <script src="../web-resources/particles.min.js"></script>
+
+    <!-- NAVBAR -->
+
+    <nav class="navbar sticky-top p-3 navbar-bg navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="../index.html">Stars Explorer</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <!-- <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">How to use</a>
+                    </li> -->
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">How to use</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="./data-used.html">Data used</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="./how-to-install.html">How to install</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="./whats-interesting.html">What's interesting</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="./optimizations-done.html">Optimizations done</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- NAVBAR END -->
+    <div id="particles-js"></div>
+
+    <div class="row mt-5 mb-5 pb-5">
+        <div class="col-md-2"></div>
+        <div class="col-md-8 p-5 pt-0">
+            <h1 class="display-6 mt-5">How to use</h1>
+            <p class="lead">
+                <p class="lead muted ">
+                    Prerequisites - Make sure you have installed the app and the app is running (you can see the stars and constellations in front of you). If not refer the <a href="./how-to-install.html">how to install</a> guide.
+                </p>
+                <p class="lead">
+                    Once installed, you can see yourself immersed in a simulation of our universe. The glowing elements are the stars
+                    and the lines are the constellations. The data from which these elements are constructed is explained in the <a href="./data-used.html">data used</a> section.
+                </p>
+                <h3 class="mt-4">Movement</h3> 
+                <p class="lead">
+                    To move and explore the universe, you can use the following controls if on a PC or Mac -><br> 
+                    <br>
+                        - WASD move the CAVE through the virtual space <br>
+                        - QE turn the CAVE within the virtual space <br>
+                        - RF raise and lower the CAVE within the virtual space <br>
+                        - IJKL move the user within the CAVE (and even out of the CAVE if you move too far) <br>
+                        - U and O rotate the user within the CAVE <br> <br>
+                    If in the CAVE environment -> <br>
+                    <br>
+                        - Joystick to move the CAVE through the virtual space OR navigate through the menu items  <br>
+                        - L2 + joystick to rotate the CAVE within the virtual space <br>
+                        - X to go back OR cancel<br>
+                        - O to bring up menu OR select any menu items<br>
+                </p>
+                <h3 class="mt-4">Menus</h3> 
+                <p class="lead">
+                    Use right click on your PC to bring up the main menu. Note that the main menu comes up inside the CAVE gameobject so your player view needs to be inside the CAVE to see that menu. <br> <br>
+                    - App Info - Load in-app info screen
+                    <br>
+                    - Constellation Sets - Choose what set of constellation to view
+                    <br>
+                    - Controls - View distance from origin, change distance mapping scale between stars,   start or stop time (movement of stars), and reset controls
+                    <br>
+                    - Constellation Info -> Take a tour of Aquarius and read more about it
+                    <br>
+                    - Color Scheme -> Switch the coloring of stars between stellar and number of known explonets 
+                    <br>
+                    - Change Music -> Switch background tracks
+                </p>
+            </p>
+
+            <h1 class="display-6 mt-5">Video</h1>
+            <p class="lead">
+                <p class="lead">
+                    In the video, you can see in the CAVE simulator that the stars are rendered as cubes, and the
+                    constellation lines are in purple.
+                </p>
+                <video controls width="480">
+                    <source src="../web-resources/demo.mov" type="video/mp4" />
+
+                    Download the
+                    <a href="../web-resources/demo.mov">MOV</a>
+                    video.
+                </video>
+            </p>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+    <script src="../js/index.js"></script>
+</body>
+
+</html>

@@ -8,6 +8,15 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: #000; /* Change this to your desired background color */
+    background-color: #010014; /* Change this to your desired background color */
     z-index: -1; /* Place the background behind other content */
-  }
+}
+
+.navbar-bg {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+.muted {
+    color: #bbb;
+    font-size: 16px;
+}
